@@ -12,7 +12,8 @@ class MyBoundService : Service() {
     var media:MediaPlayer? = null
     var ibinder : IBinder = MyIBinder()
     var currentPossiton : Int = -1
-   // var id : Int = -1
+    var idPrevious : Int = -2
+    var idNext : Int=-1
     override fun onCreate() {
         super.onCreate()
         Log.i("Music","onCreate")
@@ -44,9 +45,12 @@ class MyBoundService : Service() {
     }
 
     fun playMusic(id:Int){
+        idNext=id
         Log.i("Music","onPlay")
-        if(id==-1) {
+        if(this.idPrevious!=this.idNext) {
             media = MediaPlayer.create(applicationContext, id)
+            Log.i("Music","media created")
+            idPrevious=id
             media?.setOnCompletionListener {
                 Log.i("Music", "Complete!!!!!!!!!")
             }
@@ -56,7 +60,7 @@ class MyBoundService : Service() {
     }
 
     fun pauseMusic(){
-        media?.stop()
+        media?.pause()
         Log.i("Music","onPause")
         MyNotification(applicationContext,true)
     }
